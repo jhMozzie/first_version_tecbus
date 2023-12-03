@@ -1,2 +1,2 @@
-# tecbus
+# Tecbus
 Bus Project

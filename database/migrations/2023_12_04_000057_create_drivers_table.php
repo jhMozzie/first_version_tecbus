@@ -10,9 +10,13 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('user_types', function (Blueprint $table) {
+        Schema::create('drivers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('dni');
+            $table->string('phone');
+            $table->string('license_number');
+            $table->string('license_type');
             $table->integer('status')->default(1);
             $table->timestamps();
         });
@@ -23,6 +27,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_types');
+        Schema::dropIfExists('drivers');
     }
 };

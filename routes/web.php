@@ -26,20 +26,42 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'check_user_type'])->group(function () {
+    // Rutas para todos los usuarios autenticados
+    // Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::middleware(['check_user_type:Estudiante'])->group(function () {
-        Route::get('/estudiante/dashboard', [StudentController::class, 'StudentDashboard'])->name('estudiante.dashboard');
-    });
-    Route::middleware(['check_user_type:Administrador'])->group(function () {
-        Route::get('/admin/dashboard', [AdminController::class, 'AdminDashboard'])->name('admin.dashboard');
-    });
-    Route::middleware(['check_user_type:Profesor'])->group(function () {
-        Route::get('/profesor/dashboard', [ProfessorController::class, 'ProfessorDashboard'])->name('profesor.dashboard');
-    });
+
+    // Rutas específicas para cada tipo de usuario
+    // Route::middleware(['check_user_type:Estudiante'])->group(function () {
+    //     Route::get('/estudiante/dashboard', [StudentController::class, 'StudentDashboard'])->name('estudiante.dashboard');
+    // });
+
+    // Route::middleware(['check_user_type:Administrador'])->group(function () {
+    //     Route::get('/admin/dashboard', [AdminController::class, 'AdminDashboard'])->name('admin.dashboard');
+    // });
+
+    // Route::middleware(['check_user_type:Profesor'])->group(function () {
+    //     Route::get('/profesor/dashboard', [ProfessorController::class, 'ProfessorDashboard'])->name('profesor.dashboard');
+    // });
 });
+
+Route::middleware(['auth', 'check_user_type:Estudiante'])->group(function () {
+    Route::get('/estudiante/dashboard', [StudentController::class, 'StudentDashboard'])->name('estudiante.dashboard');
+});
+
+Route::middleware(['auth', 'check_user_type:Administrador'])->group(function () {
+    Route::get('/admin/dashboard', [AdminController::class, 'AdminDashboard'])->name('admin.dashboard');
+});
+
+Route::middleware(['auth', 'check_user_type:Profesor'])->group(function () {
+    Route::get('/profesor/dashboard', [ProfessorController::class, 'ProfessorDashboard'])->name('profesor.dashboard');
+});
+
+
+
+
 
 // Route::middleware(['auth', 'check_user_type:Administrador'])->group(function () {
 //     Route::get('/admin/dashboard', [AdminController::class, 'AdminDashboard'])->name('admin.dashboard');

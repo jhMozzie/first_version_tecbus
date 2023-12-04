@@ -4,7 +4,9 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CheckUserType
 {
@@ -13,40 +15,28 @@ class CheckUserType
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, $expectedUserType): Response
+    public function handle(Request $request, Closure $next, $expectedUserType = null)
     {
-        // if ($request->user()->Usertype->name !== $expectedUserType) {
-        //     return redirect('/' . $request->user()->Usertype->name . '/dashboard');
-        // }
-        // return $next($request);
 
+        $userType = strtolower($request->user()->Usertype->name);
 
-        $userType = $request->user()->Usertype->name;
-
-        switch ($userType) {
-            case 'Administrador':
-                if ($expectedUserType !== 'Administrador') {
-                    return redirect('admin/dashboard');
-                }
-                break;
-            case 'Profesor':
-                if ($expectedUserType !== 'Profesor') {
-                    return redirect('profesor/dashboard');
-                }
-                break;
-            case 'Estudiante':
-                if ($expectedUserType !== 'Estudiante') {
-                    return redirect('estudiante/dashboard');
-                }
-                break;
-            case 'Conductor':
-                if ($expectedUserType !== 'Conductor') {
-                    return redirect('conductor/dashboard');
-                }
-                break;
-            default:
-                return redirect('dashboard');
+        if ($userType !== strtolower($expectedUserType)) {
+            switch ($userType) {
+                case 'administrador':
+                    return redirect()->route('admin.dashboard');
+                case 'profesor':
+                    return redirect()->route('profesor.dashboard');
+                case 'estudiante':
+                    return redirect()->route('estudiante.dashboard');
+                case 'conductor':
+                    return redirect()->route('conductor.dashboard');
+                default:
+                    return redirect()->route('dashboard');
+            }
         }
+        // if ($userType !== strtolower($expectedUserType)) {
+        //     return Redirect::route('/' . $userType . '/dashboard'); // Redirige a la ruta general del dashboard
+        // }
 
         return $next($request);
     }

@@ -12,11 +12,12 @@ return new class extends Migration {
     {
         Schema::create('drivers', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('dni');
-            $table->string('phone');
-            $table->string('license_number');
-            $table->string('license_type');
+            $table->string('name')->nullable();
+            $table->string('lastname')->nullable();
+            $table->string('dni')->unique()->nullable();
+            $table->string('phone')->unique()->nullable();
+            $table->string('license_number')->unique()->nullable();
+            $table->string('license_type')->nullable();
             $table->integer('status')->default(1);
             $table->timestamps();
         });
